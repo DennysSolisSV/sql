@@ -16,6 +16,8 @@ class User:
             with connection.cursor() as cursor:
                 cursor.execute('INSERT INTO users (email, first_name, last_name) VALUES (%s,%s,%s)', 
                     (self.email, self.first_name, self.last_name))
+            # put connection back to reuse
+            connection_pool.putconn(connection)
 
 
     @classmethod
