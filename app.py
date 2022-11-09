@@ -1,6 +1,6 @@
 from user import User
 
-my_user = User('dennys@gmail.com', 'Dennys', 'Solis', None)
+my_user = User('dennys@gmail.com', 'DDennys', 'Solis', None)
 
 # print(my_user)
 
