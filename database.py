@@ -6,15 +6,26 @@ from psycopg2 import pool
 #     return psycopg2.connect(user='postgres',password='libertad26',database='atadb',host='localhost')
 
 class Database:
-        connection_pool = None
+        __connection_pool = None
 
-        def initialise(self):
-                Database.connection_pool = pool.SimpleConnectionPool(1, 10, 
-                        database='atadb',
-                        user='postgres',
-                        password='libertad26',
-                        host='localhost'
+        @staticmethod
+        def initialise(**kwargs):
+                Database.__connection_pool = pool.SimpleConnectionPool(1, 10, 
+                        **kwargs
                 )
+
+        @classmethod
+        def get_connection(cls):
+                return cls.__connection_pool.getconn()
+
+        @classmethod
+        def return_connection(cls, connection):
+                Database.__connection_pool.putconn(connection)
+
+        
+        @classmethod
+        def close_all_connections(cls):
+                Database.__connection_pool.closeall()
 
 class CursorFromConnectionFromPool:
         def __init__(self):
@@ -22,7 +33,7 @@ class CursorFromConnectionFromPool:
                 self.cursor = None
 
         def __enter__(self):
-                self.connection = connection_pool.getconn()
+                self.connection = Database.get_connection()
                 self.cursor = self.connection.cursor()
                 return self.cursor
 
@@ -32,4 +43,4 @@ class CursorFromConnectionFromPool:
                 else:
                         self.cursor.close()
                         self.connection.commit()
-                        connection_pool.putconn(self.connection)
+                        Database.return_connection(self.connection)
