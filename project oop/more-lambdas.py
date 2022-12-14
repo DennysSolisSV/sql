@@ -1,3 +1,5 @@
+import unittest
+
 class Currency:
     def __init__(self, code, exchange_to_usd):
         self.amount = 0.00
@@ -50,4 +52,12 @@ def get_currency_codes():
 def get_currencies():
     return _get_currency_resource('items', lambda x: Currency(x['code'], x['amount_to_usd']))
 
-print(get_currencies())
+def calculate_in_all_currencies(usd_amount):
+    print("-- {} USD in all currencies --".format(usd_amount))
+    for currency in get_currencies():
+        print("In {}: {:.2f}".format(currency.code, currency.in_currency(usd_amount)))
+
+
+
+class CurrencyTest(unittest.TestCase):
+    pounds = Currency('GBP', 1.21)
