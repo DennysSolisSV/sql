@@ -60,4 +60,12 @@ def calculate_in_all_currencies(usd_amount):
 
 
 class CurrencyTest(unittest.TestCase):
-    pounds = Currency('GBP', 1.21)
+
+    def test_create_currency(self):
+        pounds = Currency('GBP', 1.21)
+
+        self.assertEqual(pounds.code, 'GBP')
+        self.assertEqual(pounds.exchange_to_usd, 1.21)
+
+    def test_compare_currency(self):
+        
